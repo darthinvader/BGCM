@@ -10,7 +10,7 @@ class CardImage:
         self.Ly = Ly      # The position of the photo in the Y axis (measured from up to down)
         self.card_image = (Image.open(path)).resize((Sx, Sy), Image.ANTIALIAS)
 
+    # Add the image to the card
+
     def add2card(self, card):
         card.paste(self.card_image, (self.Lx, self.Ly), self.card_image)
-
-    

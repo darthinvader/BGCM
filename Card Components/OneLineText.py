@@ -8,3 +8,5 @@ class OneLineText:
         self.Lx = Lx  # The position of the photo in the X axis (measured from right to left )
         self.Ly = Ly  # The position of the photo in the Y axis (measured from up to down)
         self.font = font
+
+    def add2card(self, card):
