@@ -12,5 +12,5 @@ class CardImage:
 
     # Add the image to the card
 
-    def add2card(self, card):
+    def add_to_card(self, card):
         card.paste(self.card_image, (self.Lx, self.Ly), self.card_image)

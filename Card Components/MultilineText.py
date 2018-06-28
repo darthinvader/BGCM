@@ -9,5 +9,5 @@ class MultilineText:
         self.Ly = Ly  # The position of the photo in the Y axis (measured from up to down)
         self.font = font
 
-        def add2card(self, card):
+        def add_to_card(self, card):
 
