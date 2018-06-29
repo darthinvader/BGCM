@@ -2,6 +2,7 @@ from PIL import ImageDraw, Image, ImageFont
 
 import math
 
+
 class OneLineText:
 
     def __init__(self, text, Sx, Sy, Lx, Ly, font):
@@ -16,9 +17,8 @@ class OneLineText:
         font_size, txt_size = self.find_font_size()
         pos = self.get_starting_pos(txt_size)
         d = ImageDraw.Draw(card)
-        FontLoad = ImageFont.truetype(self.font, font_size)
-        d.text(pos, self.txt, font=self.font, fill=(255, 255, 255, 0))
-
+        font_load = ImageFont.truetype(self.font, font_size)
+        d.text(pos, self.text, font=self.font_load, fill=(255, 255, 255, 0))
 
     def find_font_size(self):
         font_load = ImageFont.truetype(self.font, 100)
@@ -30,8 +30,7 @@ class OneLineText:
         font_width = math.floor(self.Sx / txt_width)
         font_height = math.floor(self.Sy / txt_height)
 
-
-        if font_width>font_height:
+        if font_width > font_height:
             font_size = font_height
         else:
             font_size = font_width
