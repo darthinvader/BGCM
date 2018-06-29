@@ -18,7 +18,7 @@ class OneLineText:
         pos = self.get_starting_pos(txt_size)
         d = ImageDraw.Draw(card)
         font_load = ImageFont.truetype(self.font, font_size)
-        d.text(pos, self.text, font=self.font_load, fill=(255, 255, 255, 0))
+        d.text(pos, self.text, font=font_load, fill=(255, 255, 255, 0))
 
     def find_font_size(self):
         font_load = ImageFont.truetype(self.font, 100)
@@ -41,7 +41,8 @@ class OneLineText:
         return font_size, txt_size
 
     def get_starting_pos(self, txt_size):
-        posx = self.Lx + (self.Sx - txt_size[0]) / 2
-        posy = self.Ly + (self.Sy - txt_size[1]) / 2
+        print(txt_size)
+        posx = self.Lx + (self.Sx)/2 - txt_size[0]/2
+        posy = self.Ly + (self.Sy)/2 - txt_size[1]/2
 
         return posx, posy
