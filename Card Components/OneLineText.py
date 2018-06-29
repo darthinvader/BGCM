@@ -13,25 +13,36 @@ class OneLineText:
         self.font = font
 
     def add_to_card(self, card):
+        font_size, txt_size = self.find_font_size()
+        pos = self.get_starting_pos(txt_size)
+        d = ImageDraw.Draw(card)
+        FontLoad = ImageFont.truetype(self.font, font_size)
+        d.text(pos, self.txt, font=self.font, fill=(255, 255, 255, 0))
 
 
     def find_font_size(self):
-        FontLoad = ImageFont.truetype(self.font, 100)
-        txtImage = Image.new('RGBA', (1000,1000), (255, 255, 255, 0))
-        d = ImageDraw.Draw(txtImage)
-        txtsize = d.textsize(self.text, FontLoad)
-        txtWidth = txtsize[0] / 100
-        txtHeight = txtsize[1] / 100
-        fontWidth = math.floor(self.Sx / txtWidth)
-        fontHeight = math.floor(self.Sy / txtHeight)
+        font_load = ImageFont.truetype(self.font, 100)
+        txt_image = Image.new('RGBA', (self.Sx, self.Sy), (255, 255, 255, 0))
+        d = ImageDraw.Draw(txt_image)
+        txt_size = d.textsize(self.text, font_load)
+        txt_width = txt_size[0] / 100
+        txt_height = txt_size[1] / 100
+        font_width = math.floor(self.Sx / txt_width)
+        font_height = math.floor(self.Sy / txt_height)
 
 
-        if fontWidth > fontHeight:
-            fontSize = fontHeight
+        if font_width>font_height:
+            font_size = font_height
         else:
-            fontSize = fontWidth
+            font_size = font_width
 
-        FontLoad = ImageFont.truetype(self.font, fontSize)
-        txtsize = d.textsize(self.text, FontLoad)
+        font_load = ImageFont.truetype(self.font, font_size)
+        txt_size = d.textsize(self.text, font_load)
 
-        return fontSize, txtsize
+        return font_size, txt_size
+
+    def get_starting_pos(self, txt_size):
+        posx = self.Lx + (self.Sx - txt_size[0]) / 2
+        posy = self.Ly + (self.Sy - txt_size[1]) / 2
+
+        return posx, posy
