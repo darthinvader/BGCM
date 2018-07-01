@@ -21,12 +21,13 @@ class OneLineText:
         d.text(pos, self.text, font=font_load, fill=(255, 255, 255, 0))
 
     def find_font_size(self):
-        font_load = ImageFont.truetype(self.font, 100)
+        font_size = 100
+        font_load = ImageFont.truetype(self.font, font_size)
         txt_image = Image.new('RGBA', (self.Sx, self.Sy), (255, 255, 255, 0))
         d = ImageDraw.Draw(txt_image)
         txt_size = d.textsize(self.text, font_load)
-        txt_width = txt_size[0] / 100
-        txt_height = txt_size[1] / 100
+        txt_width = txt_size[0] / font_size
+        txt_height = txt_size[1] / font_size
         font_width = math.floor(self.Sx / txt_width)
         font_height = math.floor(self.Sy / txt_height)
 
