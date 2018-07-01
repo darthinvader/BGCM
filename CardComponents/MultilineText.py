@@ -14,61 +14,111 @@ class MultilineText:
         self.font = font
 
     def add_to_card(self, card):
-        font_size, word_tuples = self.fit_text_to_space()
+        # Calculate font size and the lines its going to draw
+        font_size, lines = self.fit_text_to_space()
 
-        words = self.text.split()
-        lines = lines_calc(words, word_tuples)
-        print(lines)
-
+        # Load the font and the Image of the card
         font_load = ImageFont.truetype(self.font, font_size)
         d = ImageDraw.Draw(card)
 
-        heights = self.calc_line_pos(lines, font_size)
+        # Get the position of each line
+        line_pos = self.calc_line_pos(lines, font_size)  #return
+
+        # Draw each line at their correct position
         i = 0
-        for h in heights:
+        for lp in line_pos:
             l = lines[i]
-            d.text(h, l, font=font_load, fill=(255, 255, 255, 0))
+            d.text(lp, l, font=font_load, fill=(255, 255, 255, 0))
             i = i+1
 
+    # This function returns the font and the lines of the Text
     def fit_text_to_space(self):
+        # Basic variables to use later for the calculations
         font_size = 100
         font_load = ImageFont.truetype(self.font, font_size)
         txt_image = Image.new('RGBA', (self.Sx, self.Sy), (255, 255, 255, 0))
         d = ImageDraw.Draw(txt_image)
+
+        # This calculates the width and height of the text in a single line of size 1 of the current font
+        # (It is not really size 1 because if it was it would lose precision so i use font 100 and then divide by 100
+        # which is more precise)
         txt_size = d.textsize(self.text, font_load)
         txt_width = txt_size[0] / font_size
         txt_height = txt_size[1] / font_size
 
+        # The calculation below is being thought like this
+        # We have a rectangular space that we want to fit our lines
+        # So in order to determine a good approximation of the font size we take the width and height of the text
+        # and calculate that as a rectangular area T = (x*y)
+        # then we take the size of our rectangle we want to fit our text S for the area of the rectangle
+        # Divide that by T => S/T
+        # That gives as how much bigger the rectangle is than our text rectangle
+        # And lastly we take its square root because the font_size increases both height and width proportionally
+        # so by square rooting we get our approximation for the font_size
+        # This approximation will be almost always bigger or equal to our actual font_size we need
+        # Example below
+        # Our space to fill:
+        # |-----------|
+        # |           |
+        # |           |
+        # |           |
+        # |           |
+        # |-----------|
+        # 11*6
+        # Our Text Line :
+        # |-----|
+        # |-----|
+        # 5 * 2
+        # So the second square is (11*6)/(5*2) = 6.6
+        # So we need to multiply the Text line's sides by root(6.6) = 2.5
+        # To get a square with the same area
+        # The flooring in the line below is done because font can't be a float number
+
         font_size = math.floor(math.sqrt((self.Sx * self.Sy) / (txt_width * txt_height)))
+
+        # We take the biggest word width so we know it can fit in a single line alone
         word_size = self.word_size_calc(font_size)
         max_word_size = 0
         for ws in word_size:
             if ws > max_word_size:
                 max_word_size = ws
 
+        # If it cannot the we reduce our font_size to a size that it will make our word fit
         if max_word_size > self.Sx:
             font_size = math.floor(font_size * (self.Sx / max_word_size))
 
+        # Then we start to calculate the seperation of the words in lines
         txt_size, max_lines = self.text_width_calc(font_size)
-        space_width = self.line_width_calc(' ',font_size)[0]
+        space_width = self.line_size_calc(' ', font_size)[0]
         result = self.solve_wrap(word_size, space_width)
 
         flag = True
         wsl = len(word_size)
+
+        # And if the words don't fit in the maximum ammount of lines we have
         while flag:
+            # We reduce the size of the font by 1 until they do
             if not test_max_line_viability(max_lines, result):
                 font_size = font_size - 1
                 txt_size, max_lines = self.text_width_calc(font_size)
                 word_size = self.word_size_calc(font_size)
-                space_width = self.line_width_calc(' ', font_size)[0]
+                space_width = self.line_size_calc(' ', font_size)[0]
                 result = self.solve_wrap(word_size, space_width)
                 continue
             else:
                 flag = False
-        word_tuples = word_break(result)
-        return font_size, word_tuples
 
-    def solve_wrap(self, word_size,space_width):
+        # Then we take those words in tuples (for example line 1 will be from word 1 to word 5 ,
+        # line 2 from 6 to 8 and so on)
+        word_tuples = word_break(result)
+        words = self.text.split()
+        lines = lines_calc(words, word_tuples)
+        # We return the font_size and the lines of text
+        return font_size, lines
+
+    # This is a dynamic programming algorithm to solve word wrapping problem
+
+    def solve_wrap(self, word_size, space_width):
         wsl = len(word_size)
 
         cost = [[0 for x in range(wsl)] for y in range(wsl)]
@@ -98,6 +148,8 @@ class MultilineText:
                     result[i] = j
         return result
 
+    # This function is a helper function to calculate each word's size
+
     def word_size_calc(self, font_size):
         words = self.text.split()
         word_size = list()
@@ -109,6 +161,7 @@ class MultilineText:
             word_size.append(txt_size[0])
         return word_size
 
+    # This function is a helper function to calculate the total width of the text
     def text_width_calc(self, font_size):
         font_load = ImageFont.truetype(self.font, font_size)
         txt_image = Image.new('RGBA', (self.Sx, self.Sy), (255, 255, 255, 0))
@@ -117,37 +170,39 @@ class MultilineText:
         max_lines = math.floor(self.Sy / txt_size[1])
         return txt_size, max_lines
 
+    # This function is a helper function to calculate the position of each line's position
     def calc_line_pos(self, lines, font_size):
         height = 0
         poses = list()
         for l in lines:
             poses.append((0, height))
-            txt_size = self.line_width_calc(l, font_size)
+            txt_size = self.line_size_calc(l, font_size)
             height = height + txt_size[1]
 
         return poses
-    def line_width_calc(self, line, font_size):
+
+    # This calculates the specified line size
+    def line_size_calc(self, line, font_size):
         font_load = ImageFont.truetype(self.font, font_size)
         txt_image = Image.new('RGBA', (self.Sx, self.Sy), (255, 255, 255, 0))
         d = ImageDraw.Draw(txt_image)
         txt_size = d.textsize(line, font_load)
         return txt_size
 
+# This is a helper function to check if the line sequence can be filled to the space we have
 def test_max_line_viability(max_lines, result):
-    flag = True
     i = 0
     count = 0
     length = len(result)
-    while flag:
+    while 1 == 1:
         if i >= length:
-            flag = False
             break
         count = count + 1
         i = result[i]
 
     return max_lines >= count
 
-
+# This is a helper function to calculate the tuple of continuous words indexes in lines
 def word_break(result):
     i = 0
     flag = True
@@ -161,7 +216,7 @@ def word_break(result):
 
     return word_tuple
 
-
+# This helper function returns the text lines for the text in working order
 def lines_calc(words, word_tuple):
     lines = list()
     for w in word_tuple:
