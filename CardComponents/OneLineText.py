@@ -43,7 +43,7 @@ class OneLineText:
 
     def get_starting_pos(self, txt_size):
         print(txt_size)
-        posx = self.Lx + (self.Sx)/2 - txt_size[0]/2
-        posy = self.Ly + (self.Sy)/2 - txt_size[1]/2
+        posx = self.Lx + self.Sx/2 - txt_size[0]/2
+        posy = self.Ly + self.Sy/2 - txt_size[1]/2
 
         return posx, posy
