@@ -229,7 +229,8 @@ def lines_calc(words, word_tuple):
         lines.append(word)
     return lines
 
-#This is a helper function that makes a text outline
+
+# This is a helper function that makes a text outline
 def outline_maker(d, pos, text, font_load, fill):
     d.text((pos[0] + 1, pos[1] + 1), text, font=font_load, fill=fill)
     d.text((pos[0] + 1, pos[1]), text, font=font_load, fill=fill)
