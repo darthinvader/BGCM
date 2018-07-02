@@ -22,14 +22,15 @@ class MultilineText:
         d = ImageDraw.Draw(card)
 
         # Get the position of each line
-        line_pos = self.calc_line_pos(lines, font_size)  #return
+        line_pos = self.calc_line_pos(lines, font_size)
 
         # Draw each line at their correct position
         i = 0
         for lp in line_pos:
-            l = lines[i]
-            d.text(lp, l, font=font_load, fill=(255, 255, 255, 0))
-            i = i+1
+            line = lines[i]
+            outline_maker(d, lp, line, font_load, (255, 255, 255, 255))
+            d.text(lp, line, font=font_load, fill=(24,24,24, 255))
+            i = i + 1
 
     # This function returns the font and the lines of the Text
     def fit_text_to_space(self):
@@ -69,8 +70,8 @@ class MultilineText:
         # |-----|
         # |-----|
         # 5 * 2
-        # So the second square is (11*6)/(5*2) = 6.6
-        # So we need to multiply the Text line's sides by root(6.6) = 2.5
+        # So the second square is (11*6)/(5*2) = 6.6 smaller than the first
+        # So we need to multiply the Text line's each side by root(6.6) = 2.5
         # To get a square with the same area
         # The flooring in the line below is done because font can't be a float number
 
@@ -87,15 +88,14 @@ class MultilineText:
         if max_word_size > self.Sx:
             font_size = math.floor(font_size * (self.Sx / max_word_size))
 
-        # Then we start to calculate the seperation of the words in lines
+        # Then we start to calculate the separation of the words in lines
         txt_size, max_lines = self.text_width_calc(font_size)
         space_width = self.line_size_calc(' ', font_size)[0]
         result = self.solve_wrap(word_size, space_width)
 
         flag = True
-        wsl = len(word_size)
 
-        # And if the words don't fit in the maximum ammount of lines we have
+        # And if the words don't fit in the maximum amount of lines we have
         while flag:
             # We reduce the size of the font by 1 until they do
             if not test_max_line_viability(max_lines, result):
@@ -175,7 +175,7 @@ class MultilineText:
         height = 0
         poses = list()
         for l in lines:
-            poses.append((0, height))
+            poses.append((self.Lx, self.Ly + height))
             txt_size = self.line_size_calc(l, font_size)
             height = height + txt_size[1]
 
@@ -189,6 +189,7 @@ class MultilineText:
         txt_size = d.textsize(line, font_load)
         return txt_size
 
+
 # This is a helper function to check if the line sequence can be filled to the space we have
 def test_max_line_viability(max_lines, result):
     i = 0
@@ -201,6 +202,7 @@ def test_max_line_viability(max_lines, result):
         i = result[i]
 
     return max_lines >= count
+
 
 # This is a helper function to calculate the tuple of continuous words indexes in lines
 def word_break(result):
@@ -216,6 +218,7 @@ def word_break(result):
 
     return word_tuple
 
+
 # This helper function returns the text lines for the text in working order
 def lines_calc(words, word_tuple):
     lines = list()
@@ -225,3 +228,14 @@ def lines_calc(words, word_tuple):
             word = word + ' ' + words[i]
         lines.append(word)
     return lines
+
+
+def outline_maker(d, pos, text, font_load, fill):
+    d.text((pos[0] + 1, pos[1] + 1), text, font=font_load, fill=fill)
+    d.text((pos[0] + 1, pos[1]), text, font=font_load, fill=fill)
+    d.text((pos[0] + 1, pos[1] - 1), text, font=font_load, fill=fill)
+    d.text((pos[0] - 1, pos[1]), text, font=font_load, fill=fill)
+    # d.text((pos[0] - 1, pos[1] + 1), text, font=font_load, fill=fill)
+    # d.text((pos[0] + 1, pos[1]), text, font=font_load, fill=fill)
+    # d.text((pos[0], pos[1] + 1), text, font=font_load, fill=fill)
+    # d.text((pos[0], pos[1] - 1), text, font=font_load, fill=fill)fill

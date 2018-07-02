@@ -1,5 +1,5 @@
 from PIL import ImageDraw, Image, ImageFont
-
+from CardComponents import MultilineText as Mt
 import math
 
 
@@ -18,7 +18,8 @@ class OneLineText:
         pos = self.get_starting_pos(txt_size)
         d = ImageDraw.Draw(card)
         font_load = ImageFont.truetype(self.font, font_size)
-        d.text(pos, self.text, font=font_load, fill=(255, 255, 255, 0))
+        Mt.outline_maker(d,pos,self.text,font_load,(0,0,0,255))
+        d.text(pos, self.text, font=font_load, fill=(255, 255, 255, 255))
 
     def find_font_size(self):
         font_size = 100
