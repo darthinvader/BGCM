@@ -15,13 +15,13 @@ Folder to be saved
 
 !
 
-SizeX SizeY Name to be saved
+SizeX SizeY ' Name to be saved ' 
 
-@Image_Path SizeX SizeY LocationX LocationY@
+@' Image Path ' SizeX SizeY LocationX LocationY@
 
-$One Line Text SizeX SizeY LocationX LocationY font$
+$' One Line Text ' SizeX SizeY LocationX LocationY 'font' borderX borderY$
  
-%Multiline Text SizeX SizeY LocationX LocationY font%
+%' Multiline Text ' SizeX SizeY LocationX LocationY 'font' borderX borderY%
 
 !
 
