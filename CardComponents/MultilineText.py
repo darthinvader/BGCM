@@ -5,13 +5,13 @@ from numpy import Inf
 
 class MultilineText:
 
-    def __init__(self, text, Sx, Sy, Lx, Ly, font):
+    def __init__(self, text, Sx, Sy, Lx, Ly, font, borderX = 0, borderY = 0):
         self.text = text
-        self.Sx = Sx  # The Size of X axis of the photo
-        self.Sy = Sy  # The size of Y axis of the photo
-        self.Lx = Lx  # The position of the photo in the X axis (measured from right to left )
-        self.Ly = Ly  # The position of the photo in the Y axis (measured from up to down)
         self.font = font
+        self.Sx = Sx-borderX  # The Size of X axis of the photo
+        self.Sy = Sy-borderY  # The size of Y axis of the photo
+        self.Lx = Lx+(borderX/2)  # The position of the photo in the X axis (measured from right to left )
+        self.Ly = Ly+(borderY/2)  # The position of the photo in the Y axis (measured from up to down)
 
     def add_to_card(self, card):
         # Calculate font size and the lines its going to draw
@@ -29,7 +29,7 @@ class MultilineText:
         for lp in line_pos:
             line = lines[i]
             outline_maker(d, lp, line, font_load, (255, 255, 255, 255))
-            d.text(lp, line, font=font_load, fill=(24,24,24, 255))
+            d.text(lp, line, font=font_load, fill=(0,0,0, 255))
             i = i + 1
 
     # This function returns the font and the lines of the Text
@@ -236,7 +236,7 @@ def outline_maker(d, pos, text, font_load, fill):
     d.text((pos[0] + 1, pos[1]), text, font=font_load, fill=fill)
     d.text((pos[0] + 1, pos[1] - 1), text, font=font_load, fill=fill)
     d.text((pos[0] - 1, pos[1]), text, font=font_load, fill=fill)
-    # d.text((pos[0] - 1, pos[1] + 1), text, font=font_load, fill=fill)
-    # d.text((pos[0] + 1, pos[1]), text, font=font_load, fill=fill)
-    # d.text((pos[0], pos[1] + 1), text, font=font_load, fill=fill)
-    # d.text((pos[0], pos[1] - 1), text, font=font_load, fill=fill)fill
+    d.text((pos[0] - 1, pos[1] + 1), text, font=font_load, fill=fill)
+    d.text((pos[0] + 1, pos[1]), text, font=font_load, fill=fill)
+    d.text((pos[0], pos[1] + 1), text, font=font_load, fill=fill)
+    d.text((pos[0], pos[1] - 1), text, font=font_load, fill=fill)
