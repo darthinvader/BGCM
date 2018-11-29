@@ -16,10 +16,10 @@ card.add_component(name_border)
 card.add_component(text_border)
 card.add_component(card_border)
 
-card_name = OneLineText('The Great Test Image.', 1300, 200, 100, 125, 'DejaVuSans.ttf')
+card_name = OneLineText('The Great Test Image.', 390, 90,155, 10, 'DejaVuSans.ttf')
 card_effect = MultilineText(
-    'The Great effect that has some text her and its going to be grant and stuff i dont know maybe.Something about some abilities and stuff.',
-    1300, 650, 100, 1225, 'DejaVuSans.ttf', 100, 200)
+    'Gain 1 Coin and 1 Tasty.Trash 1 card from the Supermarket and draw 1 card from your Deck.', 680, 120,
+    10,505, 'DejaVuSans.ttf')
 
 card.add_component(card_name)
 card.add_component(card_effect)

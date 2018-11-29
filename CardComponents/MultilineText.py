@@ -5,13 +5,15 @@ from numpy import Inf
 
 class MultilineText:
 
-    def __init__(self, text, Sx, Sy, Lx, Ly, font, borderX = 0, borderY = 0):
+    def __init__(self, text, Sx, Sy, Lx, Ly, font, borderX = 0, borderY = 0,outline=False,center=True):
         self.text = text
         self.font = font
         self.Sx = Sx-borderX  # The Size of X axis of the photo
         self.Sy = Sy-borderY  # The size of Y axis of the photo
         self.Lx = Lx+(borderX/2)  # The position of the photo in the X axis (measured from right to left )
         self.Ly = Ly+(borderY/2)  # The position of the photo in the Y axis (measured from up to down)
+        self.outline = outline
+        self.center = center
 
     def add_to_card(self, card):
         # Calculate font size and the lines its going to draw
@@ -28,8 +30,9 @@ class MultilineText:
         i = 0
         for lp in line_pos:
             line = lines[i]
-            outline_maker(d, lp, line, font_load, (255, 255, 255, 255))
-            d.text(lp, line, font=font_load, fill=(0,0,0, 255))
+            if self.outline:
+                outline_maker(d, lp, line, font_load, (255, 255, 255, 255))
+            d.text(lp, line, font=font_load, fill=(0, 0, 0, 255))
             i = i + 1
 
     # This function returns the font and the lines of the Text
@@ -76,7 +79,7 @@ class MultilineText:
         # The flooring in the line below is done because font can't be a float number
 
         font_size = math.floor(math.sqrt((self.Sx * self.Sy) / (txt_width * txt_height)))
-
+        print(font_size)
         # We take the biggest word width so we know it can fit in a single line alone
         word_size = self.word_size_calc(font_size)
         max_word_size = 0
@@ -175,10 +178,19 @@ class MultilineText:
         height = 0
         poses = list()
         for l in lines:
-            poses.append((self.Lx, self.Ly + height))
             txt_size = self.line_size_calc(l, font_size)
+            posx = self.Lx
+            if self.center:
+                posx = self.Lx + int((self.Sx - txt_size[0])/2)
+            posy = (self.Ly + height)
+            poses.append((posx, posy))
             height = height + txt_size[1]
-
+        if self.center:
+            addy = int((self.Sy - height)/2)
+            for i in range(0, len(poses)):
+                p = poses[i]
+                p = (p[0], p[1] + addy)
+                poses[i] = p
         return poses
 
     # This calculates the specified line size
