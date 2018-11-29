@@ -6,7 +6,7 @@ class Card:
         self.components = []
         self.sizex = sizex
         self.sizey = sizey
-        self.card = Image.new('RGBA', (self.sizex, self.sizey), 'Black')
+        self.card = Image.new('RGBA', (self.sizex, self.sizey), 'White')
         self.save_path = save_path
         self.image_name = image_name
 

@@ -8,9 +8,9 @@ class CardImage:
         self.Sy = Sy      # The size of Y axis of the photo
         self.Lx = Lx      # The position of the photo in the X axis (measured from right to left )
         self.Ly = Ly      # The position of the photo in the Y axis (measured from up to down)
-        self.card_image = (Image.open(path)).resize((Sx, Sy), Image.ANTIALIAS)
+        self.card_image = (Image.open(path)).resize((Sx, Sy), Image.ANTIALIAS).convert('RGBA')
 
     # Add the image to the card
 
     def add_to_card(self, card):
-        card.paste(self.card_image, (self.Lx, self.Ly), None)
+        card.paste(self.card_image, (self.Lx, self.Ly), self.card_image)
