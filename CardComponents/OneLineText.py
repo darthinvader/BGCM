@@ -5,7 +5,7 @@ import math
 
 class OneLineText:
 
-    def __init__(self, text, Sx, Sy, Lx, Ly, font, borderX = 0, borderY = 0,outline=False, center=True):
+    def __init__(self, text, Sx, Sy, Lx, Ly, font, borderX = 0, borderY = 0,outline=False, center=True, color=(0,0,0,255), outlineC=(0,0,0,255)):
         self.text = text
         self.font = font
         self.Sx = Sx - borderX  # The Size of X axis of the photo
@@ -14,6 +14,8 @@ class OneLineText:
         self.Ly = Ly + (borderY / 2)  # The position of the photo in the Y axis (measured from up to down)
         self.outline = outline
         self.center = center
+        self.color = color
+        self.outlineC = outlineC
 
     def add_to_card(self, card):
         font_size, txt_size = self.find_font_size()
@@ -21,8 +23,8 @@ class OneLineText:
         d = ImageDraw.Draw(card)
         font_load = ImageFont.truetype(self.font, font_size)
         if self.outline:
-            Mt.outline_maker(d, pos, self.text,font_load, (255, 255, 255, 255))
-        d.text(pos, self.text, font=font_load, fill=(0, 0, 0, 255))
+            Mt.outline_maker(d, pos, self.text, font_load, self.outlineC)
+        d.text(pos, self.text, font=font_load, fill=self.color)
 
     def find_font_size(self):
         font_size = 100

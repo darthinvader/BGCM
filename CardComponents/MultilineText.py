@@ -5,7 +5,7 @@ from numpy import Inf
 
 class MultilineText:
 
-    def __init__(self, text, Sx, Sy, Lx, Ly, font, borderX = 0, borderY = 0,outline=False,center=True):
+    def __init__(self, text, Sx, Sy, Lx, Ly, font, borderX = 0, borderY = 0,outline=False,center=True, color = (0,0,0,255)):
         self.text = text
         self.font = font
         self.Sx = Sx-borderX  # The Size of X axis of the photo
@@ -14,7 +14,7 @@ class MultilineText:
         self.Ly = Ly+(borderY/2)  # The position of the photo in the Y axis (measured from up to down)
         self.outline = outline
         self.center = center
-
+        self.color = color
     def add_to_card(self, card):
         # Calculate font size and the lines its going to draw
         font_size, lines = self.fit_text_to_space()
@@ -32,7 +32,7 @@ class MultilineText:
             line = lines[i]
             if self.outline:
                 outline_maker(d, lp, line, font_load, (255, 255, 255, 255))
-            d.text(lp, line, font=font_load, fill=(0, 0, 0, 255))
+            d.text(lp, line, font=font_load, fill=self.color)
             i = i + 1
 
     # This function returns the font and the lines of the Text
@@ -75,7 +75,7 @@ class MultilineText:
         # 5 * 2
         # So the second square is (11*6)/(5*2) = 6.6 smaller than the first
         # So we need to multiply the Text line's each side by root(6.6) = 2.5
-        # To get a square with the same area
+        # To get a parallelogram with the same area
         # The flooring in the line below is done because font can't be a float number
 
         font_size = math.floor(math.sqrt((self.Sx * self.Sy) / (txt_width * txt_height)))

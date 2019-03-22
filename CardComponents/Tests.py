@@ -21,6 +21,10 @@ card_effect = MultilineText(
     'Gain 1 Coin and 1 Tasty.Trash 1 card from the Supermarket and draw 1 card from your Deck.', 680, 120,
     10,505, 'DejaVuSans.ttf')
 
+
+
 card.add_component(card_name)
 card.add_component(card_effect)
+
+
 card.print_image()
