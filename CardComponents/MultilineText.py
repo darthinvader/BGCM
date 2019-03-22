@@ -79,7 +79,6 @@ class MultilineText:
         # The flooring in the line below is done because font can't be a float number
 
         font_size = math.floor(math.sqrt((self.Sx * self.Sy) / (txt_width * txt_height)))
-        print(font_size)
         # We take the biggest word width so we know it can fit in a single line alone
         word_size = self.word_size_calc(font_size)
         max_word_size = 0
